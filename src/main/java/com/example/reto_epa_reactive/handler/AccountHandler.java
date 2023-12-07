@@ -1,6 +1,7 @@
 package com.example.reto_epa_reactive.handler;
 
 import com.example.reto_epa_reactive.model.dto.ClientDTO;
+import com.example.reto_epa_reactive.usecase.CreateClientErrorUseCase;
 import com.example.reto_epa_reactive.usecase.CreateClientUseCase;
 import com.example.reto_epa_reactive.usecase.GetAllClientsUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ public class AccountHandler {
     private GetAllClientsUseCase getAllClientsUseCase;
     @Autowired
     private CreateClientUseCase createClientUseCase;
+    @Autowired
+    private CreateClientErrorUseCase createClientErrorUseCase;
 
     public Mono<ServerResponse> getAllClients (ServerRequest request) {
         return ServerResponse.ok()
@@ -28,6 +31,14 @@ public class AccountHandler {
     public Mono<ServerResponse> createClient(ServerRequest request) {
         return request.bodyToMono(ClientDTO.class)
                 .flatMap(clientDTO -> createClientUseCase.apply(clientDTO)
+                        .flatMap(result -> ServerResponse.ok()
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .bodyValue(result)));
+    }
+
+    public Mono<ServerResponse> createClientError(ServerRequest request) {
+        return request.bodyToMono(ClientDTO.class)
+                .flatMap(clientDTO -> createClientErrorUseCase.apply(clientDTO)
                         .flatMap(result -> ServerResponse.ok()
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .bodyValue(result)));

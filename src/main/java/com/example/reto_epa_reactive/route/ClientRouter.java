@@ -27,4 +27,12 @@ public class ClientRouter {
                 accountHandler::createClient
         );
     }
+
+    @Bean
+    public RouterFunction<ServerResponse> createClientError(AccountHandler accountHandler) {
+        return route(
+                POST("client/create/error"),
+                accountHandler::createClientError
+        );
+    }
 }

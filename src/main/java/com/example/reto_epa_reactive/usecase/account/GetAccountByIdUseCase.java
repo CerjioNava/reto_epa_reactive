@@ -6,11 +6,15 @@ import com.example.reto_epa_reactive.mapper.AccountMapper;
 import com.example.reto_epa_reactive.model.dto.AccountDTO;
 import com.example.reto_epa_reactive.model.rabbit.RabbitLogDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Mono;
 
 import java.util.Date;
 import java.util.function.Function;
 
+@Service
+@Validated
 public class GetAccountByIdUseCase implements  Function<String, Mono<AccountDTO>> {
 
     @Autowired

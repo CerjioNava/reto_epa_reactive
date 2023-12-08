@@ -1,9 +1,10 @@
 package com.example.reto_epa_reactive.handler;
 
-import com.example.reto_epa_reactive.model.dto.ClientDTO;
-import com.example.reto_epa_reactive.usecase.CreateClientErrorUseCase;
-import com.example.reto_epa_reactive.usecase.CreateClientUseCase;
-import com.example.reto_epa_reactive.usecase.GetAllClientsUseCase;
+import com.example.reto_epa_reactive.model.dto.AccountDTO;
+import com.example.reto_epa_reactive.usecase.account.CreateAccountErrorUseCase;
+import com.example.reto_epa_reactive.usecase.account.CreateAccountUseCase;
+import com.example.reto_epa_reactive.usecase.account.GetAccountByIdUseCase;
+import com.example.reto_epa_reactive.usecase.account.GetAllAccountsUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -16,29 +17,38 @@ import reactor.core.publisher.Mono;
 public class AccountHandler {
 
     @Autowired
-    private GetAllClientsUseCase getAllClientsUseCase;
+    private GetAllAccountsUseCase getAllAccountsUseCase;
     @Autowired
-    private CreateClientUseCase createClientUseCase;
+    private GetAccountByIdUseCase getAccountByIdUseCase;
     @Autowired
-    private CreateClientErrorUseCase createClientErrorUseCase;
+    private CreateAccountUseCase createAccountUseCase;
+    @Autowired
+    private CreateAccountErrorUseCase createAccountErrorUseCase;
 
-    public Mono<ServerResponse> getAllClients (ServerRequest request) {
+    public Mono<ServerResponse> getAllAccounts (ServerRequest request) {
         return ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromPublisher(getAllClientsUseCase.get(), ClientDTO.class));
+                .body(BodyInserters.fromPublisher(getAllAccountsUseCase.get(), AccountDTO.class));
     }
 
-    public Mono<ServerResponse> createClient(ServerRequest request) {
-        return request.bodyToMono(ClientDTO.class)
-                .flatMap(clientDTO -> createClientUseCase.apply(clientDTO)
+    public Mono<ServerResponse> getAccountById (ServerRequest request) {
+        return ServerResponse.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromPublisher(getAccountByIdUseCase.apply(request.pathVariable("id")), AccountDTO.class));
+
+    }
+
+    public Mono<ServerResponse> createAccount(ServerRequest request) {
+        return request.bodyToMono(AccountDTO.class)
+                .flatMap(accountDTO -> createAccountUseCase.apply(accountDTO)
                         .flatMap(result -> ServerResponse.ok()
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .bodyValue(result)));
     }
 
-    public Mono<ServerResponse> createClientError(ServerRequest request) {
-        return request.bodyToMono(ClientDTO.class)
-                .flatMap(clientDTO -> createClientErrorUseCase.apply(clientDTO)
+    public Mono<ServerResponse> createAccountError(ServerRequest request) {
+        return request.bodyToMono(AccountDTO.class)
+                .flatMap(accountDTO -> createAccountErrorUseCase.apply(accountDTO)
                         .flatMap(result -> ServerResponse.ok()
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .bodyValue(result)));

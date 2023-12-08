@@ -1,6 +1,6 @@
 package com.example.reto_epa_reactive.route;
 
-import com.example.reto_epa_reactive.handler.AccountHandler;
+import com.example.reto_epa_reactive.handler.ClientHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.server.RouterFunction;
@@ -13,26 +13,34 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 public class ClientRouter {
 
     @Bean
-    public RouterFunction<ServerResponse> getAllClients(AccountHandler accountHandler) {
+    public RouterFunction<ServerResponse> getAllClients(ClientHandler clientHandler) {
         return route(
                 GET("client/all"),
-                accountHandler::getAllClients
+                clientHandler::getAllClients
         );
     }
 
     @Bean
-    public RouterFunction<ServerResponse> createClient(AccountHandler accountHandler) {
+    public RouterFunction<ServerResponse> getClientById(ClientHandler clientHandler) {
+        return route(
+                GET("client/{id}"),
+                clientHandler::getClientById
+        );
+    }
+
+    @Bean
+    public RouterFunction<ServerResponse> createClient(ClientHandler clientHandler) {
         return route(
                 POST("client/create"),
-                accountHandler::createClient
+                clientHandler::createClient
         );
     }
 
     @Bean
-    public RouterFunction<ServerResponse> createClientError(AccountHandler accountHandler) {
+    public RouterFunction<ServerResponse> createClientError(ClientHandler clientHandler) {
         return route(
                 POST("client/create/error"),
-                accountHandler::createClientError
+                clientHandler::createClientError
         );
     }
 }

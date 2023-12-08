@@ -1,4 +1,4 @@
-package com.example.reto_epa_reactive.usecase;
+package com.example.reto_epa_reactive.usecase.client;
 
 import com.example.reto_epa_reactive.drivenAdapter.repository.IClientRepository;
 import com.example.reto_epa_reactive.mapper.ClientMapper;

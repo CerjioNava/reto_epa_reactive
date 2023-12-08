@@ -1,12 +1,12 @@
-package com.example.reto_epa_reactive.usecase;
+package com.example.reto_epa_reactive.usecase.client;
 
 import com.example.reto_epa_reactive.drivenAdapter.bus.RabbitMqPublisher;
 import com.example.reto_epa_reactive.drivenAdapter.repository.IClientRepository;
 import com.example.reto_epa_reactive.mapper.ClientMapper;
+import com.example.reto_epa_reactive.model.Client;
 import com.example.reto_epa_reactive.model.dto.ClientDTO;
-import com.example.reto_epa_reactive.model.rabbit.RabbitErrorDTO;
+import com.example.reto_epa_reactive.model.rabbit.RabbitLogDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Mono;
@@ -16,7 +16,7 @@ import java.util.function.Function;
 
 @Service
 @Validated
-public class CreateClientErrorUseCase implements Function<ClientDTO, Mono<Object>> {
+public class CreateClientUseCase implements Function<ClientDTO, Mono<ClientDTO>> {
 
     @Autowired
     private RabbitMqPublisher eventBus;
@@ -24,24 +24,21 @@ public class CreateClientErrorUseCase implements Function<ClientDTO, Mono<Object
     private final IClientRepository iClientRepository;
     private final ClientMapper mapper;
 
-    public CreateClientErrorUseCase(IClientRepository iClientRepository, ClientMapper mapper) {
+    public CreateClientUseCase(IClientRepository iClientRepository, ClientMapper mapper) {
         this.iClientRepository = iClientRepository;
         this.mapper = mapper;
     }
 
     @Override
-    public Mono<Object> apply(ClientDTO clientDTO) {
+    public Mono<ClientDTO> apply(ClientDTO clientDTO) {
         return iClientRepository
                 .save(mapper.fromDTOtoClientEntity().apply(clientDTO))
-                .flatMap(cuentaUpdate ->
-                    Mono.error(new RuntimeException("Error forzado")))
-                .onErrorResume(error -> {
-                    eventBus.publishMessageError(new RabbitErrorDTO(
-                            HttpStatus.BAD_REQUEST.value(),
-                            error.getMessage(),
+                .map(newClient -> {
+                    eventBus.publishLogs(new RabbitLogDTO(
+                            "Client added successfully: " + newClient,
                             new Date()
                     ));
-                    return Mono.empty();
+                    return mapper.fromClientEntityToDTO().apply(newClient);
                 });
     }
 }

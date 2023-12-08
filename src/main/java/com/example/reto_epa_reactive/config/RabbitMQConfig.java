@@ -28,7 +28,8 @@ public class RabbitMQConfig {
     public static final String EXCHANGE_NAME = "transactions-exchange";
     public static final String ROUTING_KEY_ERROR = "transactions.routing.error";
     public static final String ROUTING_KEY_LOGS = "transactions.routing.logs";
-    public static final String URI_NAME = "amqp://guest:guest@localhost:5672";
+//    public static final String URI_NAME = "amqp://guest:guest@localhost:5672";
+    public static final String URI_NAME = "amqps://osywzdyt:RMqVWFEMarfGsqJXrlYMFHk_pihFpYEz@chimpanzee.rmq.cloudamqp.com/osywzdyt";
 
     @Bean
     public AmqpAdmin amqpAdmin() {
@@ -56,7 +57,7 @@ public class RabbitMQConfig {
         ConnectionFactory connectionFactory = new ConnectionFactory();
         connectionFactory.useNio();
         connectionFactory.setUri(URI_NAME);
-        connectionFactory.setVirtualHost("/");
+//        connectionFactory.setVirtualHost("/");
         return connectionFactory;
     }
 

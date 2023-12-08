@@ -1,14 +1,14 @@
 version: "3.9"
 
 services:
-#  app:
-#    build: .
-#    ports:
-#      - "8080:8080"
-#    links:
-#      - mymongodb
-#    depends_on:
-#      - myrabbitmq
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    links:
+      - mymongodb
+    networks:
+      - default
 
   mymongodb:
     image: mongo:latest
@@ -21,17 +21,24 @@ services:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
-#
-  myrabbitmq:
-    image: rabbitmq:3-management
-    container_name: myrabbitmq
-    restart: always
-    environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=guest
-    ports:
-      - "5672:5672"
-      - "15672:15672"
+    networks:
+      - default
+
+#  myrabbitmq:
+#    image: rabbitmq:3-management
+#    container_name: myrabbitmq
+#    restart: always
+#    environment:
+#      - RABBITMQ_DEFAULT_USER=guest
+#      - RABBITMQ_DEFAULT_PASS=guest
+#    ports:
+#      - "5672:5672"
+#      - "15672:15672"
 
 volumes:
   mongo_data:
+
+networks:
+  default:
+    name: reto_epa_reactive_default
+    driver: bridge

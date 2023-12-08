@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reto-epa-reactive
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      role: reto-epa-reactive
+  template:
+    metadata:
+      labels:
+        role: reto-epa-reactive
+    spec:
+      containers:
+        - name: reto-epa-reactive
+          image: cerjionava/reto_epa_reactive:latest
+          ports:
+            - containerPort: 8080
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: reto-epa-reactive-service
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    role: reto-epa-reactive

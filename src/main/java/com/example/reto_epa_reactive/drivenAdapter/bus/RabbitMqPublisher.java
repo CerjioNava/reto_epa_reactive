@@ -24,13 +24,19 @@ public class RabbitMqPublisher {
 
     public void publishMessageError(RabbitErrorDTO rabbitError){
         sender
-                .send(Mono.just(new OutboundMessage(RabbitMQConfig.EXCHANGE_NAME,
-                        RabbitMQConfig.ROUTING_KEY_ERROR, gson.toJson(rabbitError).getBytes()))).subscribe();
+                .send(Mono.just(new OutboundMessage(
+                        System.getenv("EXCHANGE_NAME"),
+                        System.getenv("ROUTING_KEY_ERROR"),
+                        gson.toJson(rabbitError).getBytes())
+                )).subscribe();
     }
 
     public void publishLogs(RabbitLogDTO rabbitLog){
         sender
-                .send(Mono.just(new OutboundMessage(RabbitMQConfig.EXCHANGE_NAME,
-                        RabbitMQConfig.ROUTING_KEY_LOGS, gson.toJson(rabbitLog).getBytes()))).subscribe();
+                .send(Mono.just(new OutboundMessage(
+                        System.getenv("EXCHANGE_NAME"),
+                        System.getenv("ROUTING_KEY_LOGS"),
+                        gson.toJson(rabbitLog).getBytes())
+                )).subscribe();
     }
 }

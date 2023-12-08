@@ -23,13 +23,20 @@ import java.security.NoSuchAlgorithmException;
 @Configuration
 public class RabbitMQConfig {
 
-    public static final String QUEUE_NAME_ERROR = "transactions-error";
-    public static final String QUEUE_CLOUDWATCH = "cloudwatch-logs";
-    public static final String EXCHANGE_NAME = "transactions-exchange";
-    public static final String ROUTING_KEY_ERROR = "transactions.routing.error";
-    public static final String ROUTING_KEY_LOGS = "transactions.routing.logs";
-//    public static final String URI_NAME = "amqp://guest:guest@localhost:5672";
-    public static final String URI_NAME = "amqps://osywzdyt:RMqVWFEMarfGsqJXrlYMFHk_pihFpYEz@chimpanzee.rmq.cloudamqp.com/osywzdyt";
+    @Value("${QUEUE_NAME_ERROR}")
+    private String QUEUE_NAME_ERROR;
+    @Value("${QUEUE_CLOUDWATCH}")
+    private String QUEUE_CLOUDWATCH;
+    @Value("${EXCHANGE_NAME}")
+    private String EXCHANGE_NAME;
+    @Value("${ROUTING_KEY_ERROR}")
+    private String ROUTING_KEY_ERROR;
+    @Value("${ROUTING_KEY_LOGS}")
+    private String ROUTING_KEY_LOGS;
+//    @Value("${RABBIT_URI}")
+//        public static String URI_NAME;
+    @Value("${RABBIT_URI_CLOUD}")
+    private String URI_NAME;
 
     @Bean
     public AmqpAdmin amqpAdmin() {

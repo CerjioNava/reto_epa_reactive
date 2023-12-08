@@ -26,12 +26,14 @@ public class ClientHandler {
     private GetClientByIdUseCase getClientByIdUseCase;
 
     public Mono<ServerResponse> getAllClients (ServerRequest request) {
+        System.out.println("Request to: Get all clients");
         return ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromPublisher(getAllClientsUseCase.get(), ClientDTO.class));
     }
 
     public Mono<ServerResponse> getClientById (ServerRequest request) {
+        System.out.println("Request to: Get a client by id");
         return ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromPublisher(getClientByIdUseCase.apply(request.pathVariable("id")), ClientDTO.class));
@@ -39,6 +41,7 @@ public class ClientHandler {
     }
 
     public Mono<ServerResponse> createClient(ServerRequest request) {
+        System.out.println("Request to: Create a client");
         return request.bodyToMono(ClientDTO.class)
                 .flatMap(clientDTO -> createClientUseCase.apply(clientDTO)
                         .flatMap(result -> ServerResponse.ok()
@@ -47,6 +50,7 @@ public class ClientHandler {
     }
 
     public Mono<ServerResponse> createClientError(ServerRequest request) {
+        System.out.println("Request to: Create a client and force an error");
         return request.bodyToMono(ClientDTO.class)
                 .flatMap(clientDTO -> createClientErrorUseCase.apply(clientDTO)
                         .flatMap(result -> ServerResponse.ok()

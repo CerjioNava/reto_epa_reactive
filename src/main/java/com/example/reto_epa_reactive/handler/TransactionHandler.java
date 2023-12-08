@@ -26,12 +26,14 @@ public class TransactionHandler {
     private GetTransactionByIdUseCase getTransactionByIdUseCase;
 
     public Mono<ServerResponse> getAllTransactions (ServerRequest request) {
+        System.out.println("Request to: Get all transactions");
         return ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromPublisher(getAllTransactionsUseCase.get(), TransactionDTO.class));
     }
 
     public Mono<ServerResponse> getTransactionById (ServerRequest request) {
+        System.out.println("Request to: Get a transaction by id");
         return ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromPublisher(getTransactionByIdUseCase.apply(request.pathVariable("id")), TransactionDTO.class));
@@ -39,6 +41,7 @@ public class TransactionHandler {
     }
 
     public Mono<ServerResponse> createTransaction(ServerRequest request) {
+        System.out.println("Request to: Create a transaction");
         return request.bodyToMono(TransactionDTO.class)
                 .flatMap(transactionDTO -> createTransactionUseCase.apply(transactionDTO)
                         .flatMap(result -> ServerResponse.ok()
@@ -47,6 +50,7 @@ public class TransactionHandler {
     }
 
     public Mono<ServerResponse> createTransactionError(ServerRequest request) {
+        System.out.println("Request to: Get a transaction and force an error");
         return request.bodyToMono(TransactionDTO.class)
                 .flatMap(transactionDTO -> createTransactionErrorUseCase.apply(transactionDTO)
                         .flatMap(result -> ServerResponse.ok()

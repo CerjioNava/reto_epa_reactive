@@ -26,12 +26,14 @@ public class AccountHandler {
     private CreateAccountErrorUseCase createAccountErrorUseCase;
 
     public Mono<ServerResponse> getAllAccounts (ServerRequest request) {
+        System.out.println("Request to: Get all accounts");
         return ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromPublisher(getAllAccountsUseCase.get(), AccountDTO.class));
     }
 
     public Mono<ServerResponse> getAccountById (ServerRequest request) {
+        System.out.println("Request to: Get an account by id");
         return ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromPublisher(getAccountByIdUseCase.apply(request.pathVariable("id")), AccountDTO.class));
@@ -39,6 +41,7 @@ public class AccountHandler {
     }
 
     public Mono<ServerResponse> createAccount(ServerRequest request) {
+        System.out.println("Request to: Create an account");
         return request.bodyToMono(AccountDTO.class)
                 .flatMap(accountDTO -> createAccountUseCase.apply(accountDTO)
                         .flatMap(result -> ServerResponse.ok()
@@ -47,6 +50,7 @@ public class AccountHandler {
     }
 
     public Mono<ServerResponse> createAccountError(ServerRequest request) {
+        System.out.println("Request to: Create an account and force an error");
         return request.bodyToMono(AccountDTO.class)
                 .flatMap(accountDTO -> createAccountErrorUseCase.apply(accountDTO)
                         .flatMap(result -> ServerResponse.ok()
